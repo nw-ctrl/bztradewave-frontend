@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import aiService from '../services/aiService';
 import { 
   Search, 
   TrendingUp, 
@@ -12,12 +13,55 @@ import {
   Zap,
   BarChart3,
   Globe,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  RefreshCw
 } from 'lucide-react';
 
 const News = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [aiNews, setAiNews] = useState([]);
+  const [aiInsights, setAiInsights] = useState(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [aiStatus, setAiStatus] = useState('unknown');
+
+  // Load AI content on component mount
+  useEffect(() => {
+    loadAIContent();
+    checkAIStatus();
+  }, []);
+
+  const checkAIStatus = async () => {
+    try {
+      const status = await aiService.checkAIStatus();
+      setAiStatus(status.status);
+    } catch (error) {
+      setAiStatus('error');
+    }
+  };
+
+  const loadAIContent = async () => {
+    setIsLoadingAI(true);
+    try {
+      // Load AI-generated news
+      const newsResponse = await aiService.getTradeNews(5);
+      const formattedNews = aiService.formatNewsForDisplay(newsResponse);
+      setAiNews(formattedNews);
+
+      // Load market insights
+      const insightsResponse = await aiService.getMarketInsights('general');
+      setAiInsights(aiService.formatInsightsForDisplay(insightsResponse));
+    } catch (error) {
+      console.error('Failed to load AI content:', error);
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
+  const refreshAIContent = () => {
+    loadAIContent();
+  };
 
   const newsArticles = [
     {
@@ -131,7 +175,10 @@ const News = () => {
     }
   };
 
-  const filteredArticles = newsArticles.filter(article => {
+  // Combine static and AI-generated news
+  const allArticles = [...newsArticles, ...aiNews];
+  
+  const filteredArticles = allArticles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          article.summary.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
@@ -192,11 +239,54 @@ const News = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-foreground">AI Market Insights</h2>
-            <Badge variant="outline" className="ai-glow">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Real-time Analysis
-            </Badge>
+            <div className="flex items-center space-x-4">
+              <Badge 
+                variant="outline" 
+                className={`ai-glow ${aiStatus === 'operational' ? 'border-green-500 text-green-700' : 'border-red-500 text-red-700'}`}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                {aiStatus === 'operational' ? 'AI Active' : 'AI Offline'}
+              </Badge>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={refreshAIContent}
+                disabled={isLoadingAI}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingAI ? 'animate-spin' : ''}`} />
+                Refresh AI Content
+              </Button>
+            </div>
           </div>
+
+          {/* AI-Generated Insights */}
+          {aiInsights && (
+            <Card className="mb-8 border-2 border-primary/20">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <span>{aiInsights.title}</span>
+                  </CardTitle>
+                  <Badge variant="secondary">
+                    <Zap className="h-4 w-4 mr-1" />
+                    AI Generated
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className={`prose max-w-none ${aiInsights.isError ? 'text-red-600' : 'text-foreground'}`}>
+                  {aiInsights.content.split('\n').map((paragraph, index) => (
+                    <p key={index} className="mb-3">{paragraph}</p>
+                  ))}
+                </div>
+                <div className="mt-4 text-xs text-muted-foreground">
+                  Generated: {new Date(aiInsights.timestamp).toLocaleString()}
+                  {aiInsights.source && ` • Source: ${aiInsights.source}`}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
             {marketInsights.map((insight, index) => (

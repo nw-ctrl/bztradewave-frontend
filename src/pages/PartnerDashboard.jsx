@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import aiService from '../services/aiService';
 import { 
   BarChart, 
   Bar, 
@@ -40,6 +41,9 @@ const PartnerDashboard = () => {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [message, setMessage] = useState('');
+  const [aiRecommendations, setAiRecommendations] = useState(null);
+  const [aiInsights, setAiInsights] = useState(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,9 +54,39 @@ const PartnerDashboard = () => {
       return;
     }
 
-    const userData = JSON.parse(authData);
-    setUser(userData);
+    try {
+      const userData = JSON.parse(authData);
+      setUser(userData);
+      loadAIContent(userData);
+    } catch (error) {
+      console.error('Error parsing auth data:', error);
+      navigate('/partner-login');
+    }
   }, [navigate]);
+
+  const loadAIContent = async (userData) => {
+    setIsLoadingAI(true);
+    try {
+      // Get personalized recommendations
+      const userProfile = {
+        industry: userData.industry || 'General',
+        experience: userData.experience || 'Intermediate',
+        regions: userData.regions || 'Asia-Pacific',
+        business_size: userData.business_size || 'Medium'
+      };
+      
+      const recommendations = await aiService.getTradeRecommendations(userProfile);
+      setAiRecommendations(recommendations);
+
+      // Get market insights for user's industry
+      const insights = await aiService.getMarketInsights(userData.industry || 'general');
+      setAiInsights(aiService.formatInsightsForDisplay(insights));
+    } catch (error) {
+      console.error('Failed to load AI content:', error);
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('partnerAuth');
@@ -60,20 +94,30 @@ const PartnerDashboard = () => {
   };
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      alert('Message sent to admin team! You will receive a response within 24 hours.');
-      setMessage('');
-    }
+    // Simulate sending message
+    alert('Message sent to admin successfully!');
+    setMessage('');
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="loading-spinner mb-4" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Sample data for charts
   const tradeVolumeData = [
-    { month: 'Jan', volume: 2400 },
-    { month: 'Feb', volume: 1398 },
-    { month: 'Mar', volume: 9800 },
-    { month: 'Apr', volume: 3908 },
-    { month: 'May', volume: 4800 },
-    { month: 'Jun', volume: 3800 },
+    { month: 'Jan', volume: 45000 },
+    { month: 'Feb', volume: 52000 },
+    { month: 'Mar', volume: 48000 },
+    { month: 'Apr', volume: 61000 },
+    { month: 'May', volume: 55000 },
+    { month: 'Jun', volume: 67000 },
   ];
 
   const marketTrendsData = [
