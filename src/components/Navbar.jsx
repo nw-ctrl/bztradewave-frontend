@@ -30,7 +30,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'nav-blur shadow-lg' : 'bg-transparent'
+      isScrolled ? 'nav-blur shadow-lg' : 'bg-white/10 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -52,10 +52,10 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`text-sm font-medium transition-colors duration-200 hover:text-primary ${
+                className={`text-sm font-medium transition-colors duration-200 hover:text-white ${
                   isActive(item.path) 
-                    ? 'text-primary border-b-2 border-primary pb-1' 
-                    : 'text-foreground'
+                    ? 'text-white border-b-2 border-white pb-1' 
+                    : isScrolled ? 'text-foreground' : 'text-white/90'
                 }`}
               >
                 {item.name}

@@ -48,6 +48,20 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
+  // Check authentication on component mount
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('adminAuthenticated');
+    if (!isAuthenticated || isAuthenticated !== 'true') {
+      navigate('/admin-login');
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminUser');
+    navigate('/admin-login');
+  };
+
   // Sample data
   const partnerApplications = [
     {
@@ -647,10 +661,16 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
             <p className="text-muted-foreground">Manage partners, applications, and system operations</p>
           </div>
-          <Badge variant="outline" className="ai-glow">
-            <Shield className="h-4 w-4 mr-2" />
-            Admin Access
-          </Badge>
+          <div className="flex items-center space-x-4">
+            <Badge variant="outline" className="ai-glow">
+              <Shield className="h-4 w-4 mr-2" />
+              Admin Access
+            </Badge>
+            <Button variant="outline" onClick={handleLogout}>
+              <Shield className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Navigation Tabs */}

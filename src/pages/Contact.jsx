@@ -50,20 +50,45 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert('Thank you for your message! We will get back to you within 24 hours.');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        subject: '',
-        inquiryType: '',
-        message: ''
+    try {
+      const response = await fetch('https://formspree.io/f/xanbzodw', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          subject: formData.subject,
+          inquiryType: formData.inquiryType,
+          message: formData.message,
+          _replyto: formData.email,
+          _subject: `New Contact Form Inquiry: ${formData.subject}`,
+        }),
       });
-    }, 2000);
+
+      if (response.ok) {
+        alert('Thank you for your message! We will get back to you within 24 hours.');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          subject: '',
+          inquiryType: '',
+          message: ''
+        });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Sorry, there was an error sending your message. Please try again or contact us directly at connect@bztradewave.au');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [

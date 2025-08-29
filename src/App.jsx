@@ -5,6 +5,7 @@ import './App.css';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SecurityHeaders from './components/SecurityHeaders';
 
 // Pages
 import Home from './pages/Home';
@@ -15,11 +16,13 @@ import Partners from './pages/Partners';
 import Contact from './pages/Contact';
 import PartnerLogin from './pages/PartnerLogin';
 import PartnerDashboard from './pages/PartnerDashboard';
+import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
     <Router>
+      <SecurityHeaders />
       <div className="min-h-screen bg-background">
         <Navbar />
         <main>
@@ -32,7 +35,9 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/partner-login" element={<PartnerLogin />} />
             <Route path="/partner-dashboard" element={<PartnerDashboard />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminLogin />} />
           </Routes>
         </main>
         <Footer />
