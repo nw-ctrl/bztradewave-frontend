@@ -1,67 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import aiService from '../services/aiService';
 import { 
   Search, 
   TrendingUp, 
   Calendar, 
   Eye, 
-  Filter,
-  Zap,
   BarChart3,
-  Globe,
-  AlertCircle,
   Sparkles,
-  RefreshCw
+  ArrowRight
 } from 'lucide-react';
 
 const News = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [aiNews, setAiNews] = useState([]);
-  const [aiInsights, setAiInsights] = useState(null);
-  const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [aiStatus, setAiStatus] = useState('unknown');
-
-  // Load AI content on component mount
-  useEffect(() => {
-    loadAIContent();
-    checkAIStatus();
-  }, []);
-
-  const checkAIStatus = async () => {
-    try {
-      const status = await aiService.checkAIStatus();
-      setAiStatus(status.status);
-    } catch (error) {
-      setAiStatus('error');
-    }
-  };
-
-  const loadAIContent = async () => {
-    setIsLoadingAI(true);
-    try {
-      // Load AI-generated news
-      const newsResponse = await aiService.getTradeNews(5);
-      const formattedNews = aiService.formatNewsForDisplay(newsResponse);
-      setAiNews(formattedNews);
-
-      // Load market insights
-      const insightsResponse = await aiService.getMarketInsights('general');
-      setAiInsights(aiService.formatInsightsForDisplay(insightsResponse));
-    } catch (error) {
-      console.error('Failed to load AI content:', error);
-    } finally {
-      setIsLoadingAI(false);
-    }
-  };
-
-  const refreshAIContent = () => {
-    loadAIContent();
-  };
 
   const newsArticles = [
     {
@@ -118,36 +73,6 @@ const News = () => {
     }
   ];
 
-  const marketInsights = [
-    {
-      title: 'Q4 2025 Agriculture Export Forecast',
-      category: 'agriculture',
-      region: 'Asia-Pacific',
-      projectedGrowth: 12.5,
-      confidence: 0.87,
-      keyFindings: ['Strong demand growth expected in Q4', 'Premium products showing highest growth potential'],
-      recommendations: ['Focus on premium product lines', 'Strengthen partnerships in key markets']
-    },
-    {
-      title: 'Electronics Component Price Analysis',
-      category: 'electronics',
-      region: 'Global',
-      projectedGrowth: -8.3,
-      confidence: 0.91,
-      keyFindings: ['Component prices stabilizing after recent volatility', 'Supply chain improvements reducing costs'],
-      recommendations: ['Lock in favorable pricing agreements', 'Diversify supplier base']
-    },
-    {
-      title: 'Fashion Sustainability Trends',
-      category: 'fashion',
-      region: 'Europe',
-      projectedGrowth: 15.2,
-      confidence: 0.79,
-      keyFindings: ['Consumers willing to pay premium for sustainable fashion', 'Regulatory requirements driving market changes'],
-      recommendations: ['Invest in sustainable materials', 'Obtain relevant certifications']
-    }
-  ];
-
   const categories = [
     { value: 'all', label: 'All Categories' },
     { value: 'agriculture', label: 'Agriculture' },
@@ -155,15 +80,6 @@ const News = () => {
     { value: 'fashion', label: 'Fashion' },
     { value: 'market_analysis', label: 'Market Analysis' }
   ];
-
-  const getImpactColor = (level) => {
-    switch (level) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
-  };
 
   const getCategoryColor = (category) => {
     switch (category) {
@@ -175,10 +91,7 @@ const News = () => {
     }
   };
 
-  // Combine static and AI-generated news
-  const allArticles = [...newsArticles, ...aiNews];
-  
-  const filteredArticles = allArticles.filter(article => {
+  const filteredArticles = newsArticles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          article.summary.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
@@ -190,215 +103,220 @@ const News = () => {
       {/* Hero Section */}
       <section className="section-padding bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4">
-              <Zap className="h-4 w-4 mr-2" />
-              AI-Powered Insights
+              <Sparkles className="h-4 w-4 mr-2" />
+              Latest Updates
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               News & Market Insights
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Stay informed with real-time market intelligence, industry news, and AI-powered 
-              analysis across agriculture, electronics, and fashion sectors.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stay informed with real-time market intelligence, industry news, and analysis 
+              across agriculture, electronics, and fashion sectors.
             </p>
           </div>
 
-          {/* Search and Filter */}
-          <div className="max-w-2xl mx-auto">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search news and insights..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <div className="flex gap-2">
-                {categories.map((category) => (
-                  <Button
-                    key={category.value}
-                    variant={selectedCategory === category.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category.value)}
-                    className="whitespace-nowrap"
-                  >
-                    {category.label}
-                  </Button>
-                ))}
-              </div>
+          {/* Search and Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Search news and insights..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Market Insights Dashboard */}
-      <section className="section-padding">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-foreground">AI Market Insights</h2>
-            <div className="flex items-center space-x-4">
-              <Badge 
-                variant="outline" 
-                className={`ai-glow ${aiStatus === 'operational' ? 'border-green-500 text-green-700' : 'border-red-500 text-red-700'}`}
-              >
-                <BarChart3 className="h-4 w-4 mr-2" />
-                {aiStatus === 'operational' ? 'AI Active' : 'AI Offline'}
-              </Badge>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={refreshAIContent}
-                disabled={isLoadingAI}
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingAI ? 'animate-spin' : ''}`} />
-                Refresh AI Content
-              </Button>
+            <div className="flex gap-2 flex-wrap">
+              {categories.map((category) => (
+                <Button
+                  key={category.value}
+                  variant={selectedCategory === category.value ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.value)}
+                  className="whitespace-nowrap"
+                >
+                  {category.label}
+                </Button>
+              ))}
             </div>
           </div>
 
-          {/* AI-Generated Insights */}
-          {aiInsights && (
-            <Card className="mb-8 border-2 border-primary/20">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <span>{aiInsights.title}</span>
-                  </CardTitle>
-                  <Badge variant="secondary">
-                    <Zap className="h-4 w-4 mr-1" />
-                    AI Generated
-                  </Badge>
+          {/* Partner Signup Message for Deeper Analysis */}
+          <div className="mb-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+            <div className="flex items-start space-x-4">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <BarChart3 className="h-6 w-6 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Need Deeper Market Analysis & AI-Powered Insights?
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Get access to advanced AI market insights, predictive analytics, and real-time trade intelligence. 
+                  Our partner portal provides comprehensive market analysis tailored to your business needs.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/partners">
+                    <Button className="btn-primary">
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Sign Up as Partner
+                    </Button>
+                  </Link>
+                  <Link to="/partner-login">
+                    <Button variant="outline">
+                      Already a Partner? Sign In
+                    </Button>
+                  </Link>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className={`prose max-w-none ${aiInsights.isError ? 'text-red-600' : 'text-foreground'}`}>
-                  {aiInsights.content.split('\n').map((paragraph, index) => (
-                    <p key={index} className="mb-3">{paragraph}</p>
-                  ))}
-                </div>
-                <div className="mt-4 text-xs text-muted-foreground">
-                  Generated: {new Date(aiInsights.timestamp).toLocaleString()}
-                  {aiInsights.source && ` • Source: ${aiInsights.source}`}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {marketInsights.map((insight, index) => (
-              <Card key={index} className="market-insight-card card-hover">
+          {/* Australia-Specific Product Insights */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Australia Market Insights</h2>
+              <p className="text-gray-600">Key insights for Australian trade opportunities</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Agriculture Insight */}
+              <Card className="border-green-200 bg-green-50">
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge className={getCategoryColor(insight.category)}>
-                      {insight.category}
-                    </Badge>
-                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                      <Globe className="h-4 w-4" />
-                      <span>{insight.region}</span>
-                    </div>
-                  </div>
-                  <CardTitle className="text-lg">{insight.title}</CardTitle>
+                  <Badge className="bg-green-100 text-green-800 w-fit mb-2">Agriculture</Badge>
+                  <CardTitle className="text-lg">Australian Wheat Export Surge</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Projected Growth</span>
-                      <div className="flex items-center space-x-2">
-                        <TrendingUp className={`h-4 w-4 ${insight.projectedGrowth > 0 ? 'text-green-500' : 'text-red-500'}`} />
-                        <span className={`font-bold ${insight.projectedGrowth > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {insight.projectedGrowth > 0 ? '+' : ''}{insight.projectedGrowth}%
-                        </span>
+                      <span className="text-sm font-medium">Export Growth</span>
+                      <div className="flex items-center space-x-1">
+                        <TrendingUp className="h-4 w-4 text-green-500" />
+                        <span className="font-bold text-green-600">+18.5%</span>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Confidence Level</span>
-                      <span className="font-bold text-primary">{(insight.confidence * 100).toFixed(0)}%</span>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Key Findings</h4>
-                      <ul className="text-xs text-muted-foreground space-y-1">
-                        {insight.keyFindings.map((finding, findingIndex) => (
-                          <li key={findingIndex} className="flex items-start">
-                            <div className="w-1 h-1 bg-primary rounded-full mt-2 mr-2 flex-shrink-0" />
-                            {finding}
-                          </li>
-                        ))}
-                      </ul>
+                    <p className="text-sm text-gray-600">
+                      Strong demand from Asian markets driving record wheat exports from Australia, 
+                      with premium quality commanding higher prices.
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      Key Markets: China, Indonesia, Japan
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+
+              {/* Electronics Insight */}
+              <Card className="border-blue-200 bg-blue-50">
+                <CardHeader>
+                  <Badge className="bg-blue-100 text-blue-800 w-fit mb-2">Electronics</Badge>
+                  <CardTitle className="text-lg">Tech Component Imports Rise</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Import Growth</span>
+                      <div className="flex items-center space-x-1">
+                        <TrendingUp className="h-4 w-4 text-blue-500" />
+                        <span className="font-bold text-blue-600">+12.3%</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Australia's growing tech sector driving increased imports of semiconductors 
+                      and advanced components, particularly from Taiwan and South Korea.
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      Key Sources: Taiwan, South Korea, Singapore
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fashion Insight */}
+              <Card className="border-purple-200 bg-purple-50">
+                <CardHeader>
+                  <Badge className="bg-purple-100 text-purple-800 w-fit mb-2">Fashion</Badge>
+                  <CardTitle className="text-lg">Sustainable Fashion Demand</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Market Growth</span>
+                      <div className="flex items-center space-x-1">
+                        <TrendingUp className="h-4 w-4 text-purple-500" />
+                        <span className="font-bold text-purple-600">+22.1%</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Australian consumers increasingly choosing sustainable fashion options, 
+                      creating opportunities for eco-friendly textile imports and exports.
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      Focus: Organic cotton, recycled materials
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* News Articles */}
-      <section className="section-padding bg-gray-50">
+      {/* Latest News */}
+      <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-foreground">Latest News</h2>
-            <div className="text-sm text-muted-foreground">
+            <h2 className="text-3xl font-bold text-gray-900">Latest News</h2>
+            <Badge variant="outline" className="text-sm">
               {filteredArticles.length} articles found
-            </div>
+            </Badge>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredArticles.map((article) => (
-              <Card key={article.id} className="news-card">
+              <Card key={article.id} className="card-hover h-full">
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getCategoryColor(article.category)}>
-                        {article.category.replace('_', ' ')}
-                      </Badge>
-                      {article.isAiGenerated && (
-                        <Badge variant="outline" className="text-xs">
-                          <Zap className="h-3 w-3 mr-1" />
-                          AI Generated
-                        </Badge>
-                      )}
-                      {article.isFeatured && (
-                        <Badge variant="outline" className="text-xs">
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                    <div className={`w-3 h-3 rounded-full ${getImpactColor(article.impactLevel)}`} 
-                         title={`${article.impactLevel} impact`} />
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className={getCategoryColor(article.category)}>
+                      {article.category}
+                    </Badge>
+                    {article.isFeatured && (
+                      <Badge variant="secondary">Featured</Badge>
+                    )}
                   </div>
-                  
-                  <CardTitle className="text-xl leading-tight hover:text-primary transition-colors cursor-pointer">
+                  <CardTitle className="text-lg leading-tight">
                     {article.title}
                   </CardTitle>
-                  
-                  <CardDescription className="text-base leading-relaxed">
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col">
+                  <CardDescription className="flex-1 text-sm leading-relaxed mb-4">
                     {article.summary}
                   </CardDescription>
-                </CardHeader>
-                
-                <CardContent>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{new Date(article.date).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{article.views.toLocaleString()} views</span>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>{new Date(article.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Eye className="h-4 w-4" />
+                          <span>{article.views.toLocaleString()} views</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs">Relevance: {(article.relevanceScore * 100).toFixed(0)}%</span>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">
+                        Relevance: {Math.round(article.relevanceScore * 100)}%
+                      </span>
                       <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
                         Read More
+                        <ArrowRight className="h-4 w-4 ml-1" />
                       </Button>
                     </div>
                   </div>
@@ -406,34 +324,25 @@ const News = () => {
               </Card>
             ))}
           </div>
-
-          {filteredArticles.length === 0 && (
-            <div className="text-center py-12">
-              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">No articles found</h3>
-              <p className="text-muted-foreground">
-                Try adjusting your search terms or category filter.
-              </p>
-            </div>
-          )}
         </div>
       </section>
 
       {/* Newsletter Signup */}
-      <section className="section-padding hero-gradient">
+      <section className="section-padding bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Stay Updated with Market Intelligence
           </h2>
-          <p className="text-xl text-gray-200 mb-8">
+          <p className="text-xl text-gray-600 mb-8">
             Get AI-powered insights and market analysis delivered to your inbox weekly.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            <Input 
-              placeholder="Enter your email address" 
-              className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1"
             />
-            <Button variant="secondary" className="whitespace-nowrap">
+            <Button className="btn-primary">
               Subscribe Now
             </Button>
           </div>
