@@ -58,23 +58,53 @@ const Partners = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert('Thank you for your partnership application! We will review your submission and contact you within 48 hours.');
-      setFormData({
-        companyName: '',
-        contactName: '',
-        email: '',
-        phone: '',
-        country: '',
-        businessType: '',
-        annualRevenue: '',
-        experience: '',
-        interests: '',
-        message: ''
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bztrade.onrender.com';
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/partner/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          company_name: formData.companyName,
+          contact_name: formData.contactName,
+          email: formData.email,
+          phone: formData.phone,
+          country: formData.country,
+          business_type: formData.businessType,
+          annual_revenue: formData.annualRevenue,
+          experience: formData.experience,
+          interests: formData.interests,
+          message: formData.message
+        })
       });
-    }, 2000);
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert('Thank you for your partnership application! We will review your submission and contact you within 48 hours.');
+        setFormData({
+          companyName: '',
+          contactName: '',
+          email: '',
+          phone: '',
+          country: '',
+          businessType: '',
+          annualRevenue: '',
+          experience: '',
+          interests: '',
+          message: ''
+        });
+      } else {
+        alert(`Error: ${result.error || 'Failed to submit application. Please try again.'}`);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to submit application. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const benefits = [

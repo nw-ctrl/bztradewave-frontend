@@ -51,13 +51,45 @@ const AdminDashboard = () => {
   // Check authentication on component mount
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('adminAuthenticated');
-    if (!isAuthenticated || isAuthenticated !== 'true') {
+    const adminToken = localStorage.getItem('adminToken');
+    
+    if (!isAuthenticated || isAuthenticated !== 'true' || !adminToken) {
       navigate('/admin-login');
+      return;
     }
+    
+    // Verify token with backend
+    const verifyToken = async () => {
+      try {
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bztrade.onrender.com';
+        
+        const response = await fetch(`${API_BASE_URL}/api/auth/verify-token`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${adminToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          // Token is invalid, redirect to login
+          localStorage.removeItem('adminAuthenticated');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+          navigate('/admin-login');
+        }
+      } catch (error) {
+        console.error('Token verification failed:', error);
+        // On network error, allow access but log the issue
+      }
+    };
+    
+    verifyToken();
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     navigate('/admin-login');
   };

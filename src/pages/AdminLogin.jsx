@@ -30,23 +30,44 @@ const AdminLogin = () => {
     setIsLoading(true);
     setError('');
 
-    // Simple authentication check
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      // Store admin session
-      localStorage.setItem('adminAuthenticated', 'true');
-      localStorage.setItem('adminUser', JSON.stringify({
-        username: 'admin',
-        role: 'administrator',
-        loginTime: new Date().toISOString()
-      }));
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bztrade.onrender.com';
       
-      // Redirect to admin dashboard
-      navigate('/admin-dashboard');
-    } else {
-      setError('Invalid username or password');
+      const response = await fetch(`${API_BASE_URL}/api/auth/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: credentials.username,
+          password: credentials.password
+        })
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Store admin session
+        localStorage.setItem('adminAuthenticated', 'true');
+        localStorage.setItem('adminToken', result.token);
+        localStorage.setItem('adminUser', JSON.stringify({
+          username: result.user.username,
+          email: result.user.email,
+          role: 'administrator',
+          loginTime: new Date().toISOString()
+        }));
+        
+        // Redirect to admin dashboard
+        navigate('/admin-dashboard');
+      } else {
+        setError(result.error || 'Invalid username or password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Failed to connect to server. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (

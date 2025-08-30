@@ -132,12 +132,12 @@ const Home = () => {
 
         {/* Floating Stats */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="hero-stats-grid">
             {stats.map((stat, index) => (
-              <div key={index} className="stats-card p-4 rounded-lg text-center">
-                <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-sm text-gray-200">{stat.label}</div>
+              <div key={index} className="stats-card p-3 md:p-4 rounded-lg text-center">
+                <stat.icon className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${stat.color}`} />
+                <div className="text-lg md:text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-xs md:text-sm text-gray-200">{stat.label}</div>
               </div>
             ))}
           </div>

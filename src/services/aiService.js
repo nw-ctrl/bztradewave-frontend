@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://5000-i9worpvlecsk8tpur3owu-78751ae2.manusvm.computer';
 
 const aiService = {
   async getTradeNews(count = 3) {
@@ -71,4 +71,42 @@ const aiService = {
 
 export default aiService;
 
+
+
+  async refreshAIContent() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/ai/auto-generate-content`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error refreshing AI content:", error);
+      return { error: "Failed to refresh AI content" };
+    }
+  },
+
+  async generateInsights(category = 'agriculture', count = 1) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/ai/generate-insights`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ category, count }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error generating AI insights:", error);
+      return { error: "Failed to generate AI insights" };
+    }
+  },
 
