@@ -205,15 +205,6 @@ const PartnerLogin = () => {
                       </p>
                     </div>
                   </form>
-
-                  {/* Demo Credentials */}
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="text-sm font-medium text-blue-900 mb-2">Demo Credentials:</h4>
-                    <div className="text-xs text-blue-700 space-y-1">
-                      <div>Email: partner@example.com</div>
-                      <div>Password: demo123</div>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>
