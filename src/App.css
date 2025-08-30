@@ -303,6 +303,31 @@
 }
 
 
+/* Desktop hero stats grid layout */
+.hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.stats-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
 /* Enhanced Mobile Responsiveness - Complete Overhaul */
 @media (max-width: 640px) {
   /* Force mobile layout */
@@ -324,7 +349,7 @@
     position: relative !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: space-between !important;
     align-items: center !important;
   }
   
@@ -332,6 +357,10 @@
     width: 100% !important;
     max-width: 100% !important;
     padding: 0 !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
   
   .hero-gradient h1 {
@@ -353,12 +382,12 @@
   
   /* Stats cards mobile layout - Fixed positioning */
   .hero-stats-grid {
-    position: static !important;
+    position: relative !important;
     transform: none !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 16px !important;
-    margin-top: 3rem !important;
+    margin-top: 2rem !important;
     padding: 0 24px !important;
     max-width: 100% !important;
     width: 100% !important;

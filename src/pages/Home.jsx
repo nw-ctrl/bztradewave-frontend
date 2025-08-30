@@ -87,21 +87,21 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20 pb-32">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
         <div className="absolute inset-0 hero-overlay" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="animate-fade-in">
-            <Badge variant="secondary" className="mb-6 bg-white/20 text-white border-white/30">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex-1 flex flex-col justify-center">
+          <div className="animate-fade-in max-w-5xl mx-auto">
+            <Badge variant="secondary" className="mb-8 bg-white/20 text-white border-white/30">
               <MapPin className="h-4 w-4 mr-2" />
               Proudly from Australia
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
               Global Trade,
               <br />
               <span className="text-gradient bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
@@ -109,20 +109,20 @@ const Home = () => {
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed">
               We facilitate seamless international trade with cutting-edge technology and dedicated support 
               across agriculture, electronics, and fashion sectors.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
               <Link to="/products">
-                <Button size="lg" className="btn-primary text-lg px-8 py-4">
+                <Button size="lg" className="btn-primary text-lg px-8 py-4 shadow-2xl">
                   Explore Products
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/about">
-                <Button variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-primary text-lg px-8 py-4">
+                <Button variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-primary text-lg px-8 py-4 shadow-2xl">
                   Learn More
                 </Button>
               </Link>
@@ -130,13 +130,13 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Floating Stats */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
+        {/* Floating Stats - Positioned at bottom with proper spacing */}
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 mt-auto">
           <div className="hero-stats-grid">
             {stats.map((stat, index) => (
-              <div key={index} className="stats-card p-3 md:p-4 rounded-lg text-center">
-                <stat.icon className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-lg md:text-2xl font-bold text-white">{stat.value}</div>
+              <div key={index} className="stats-card p-4 md:p-6 rounded-xl text-center backdrop-blur-md bg-white/10 border border-white/20">
+                <stat.icon className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-3 ${stat.color} text-white`} />
+                <div className="text-lg md:text-2xl font-bold text-white mb-1">{stat.value}</div>
                 <div className="text-xs md:text-sm text-gray-200">{stat.label}</div>
               </div>
             ))}
