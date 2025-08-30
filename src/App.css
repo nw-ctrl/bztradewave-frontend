@@ -319,69 +319,92 @@
   /* Hero section fixes */
   .hero-gradient {
     min-height: 100vh !important;
-    padding: 80px 16px 60px 16px !important;
+    padding: 100px 16px 80px 16px !important;
     text-align: center !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  .hero-gradient .relative.z-10 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
   }
   
   .hero-gradient h1 {
-    font-size: 2rem !important;
+    font-size: 2.2rem !important;
     line-height: 1.1 !important;
-    margin-bottom: 1rem !important;
-    word-wrap: break-word !important;
-  }
-  
-  .hero-gradient p {
-    font-size: 1rem !important;
-    line-height: 1.4 !important;
     margin-bottom: 1.5rem !important;
+    word-wrap: break-word !important;
+    text-align: center !important;
     padding: 0 8px !important;
   }
   
-  /* Stats cards mobile layout */
+  .hero-gradient p {
+    font-size: 1.1rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 2rem !important;
+    padding: 0 16px !important;
+    text-align: center !important;
+  }
+  
+  /* Stats cards mobile layout - Fixed positioning */
   .hero-stats-grid {
+    position: static !important;
+    transform: none !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    margin-top: 2rem !important;
-    padding: 0 20px !important;
+    gap: 16px !important;
+    margin-top: 3rem !important;
+    padding: 0 24px !important;
     max-width: 100% !important;
+    width: 100% !important;
+    bottom: auto !important;
+    left: auto !important;
   }
   
   .stats-card {
-    padding: 16px 12px !important;
+    padding: 20px 16px !important;
     margin: 0 !important;
-    min-height: 100px !important;
+    min-height: 120px !important;
     text-align: center !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(15px) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    position: relative !important;
   }
   
   .stats-card svg {
-    margin-bottom: 8px !important;
+    margin-bottom: 12px !important;
     flex-shrink: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
   }
   
-  .stats-card h3, .stats-card .text-2xl, .stats-card .text-lg {
-    font-size: 1.1rem !important;
-    margin-bottom: 4px !important;
+  .stats-card .text-lg, .stats-card .text-2xl {
+    font-size: 1.25rem !important;
+    margin-bottom: 6px !important;
     font-weight: 700 !important;
-    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    color: white !important;
   }
   
-  .stats-card p, .stats-card .text-sm, .stats-card .text-xs {
-    font-size: 0.7rem !important;
-    line-height: 1.2 !important;
+  .stats-card .text-xs, .stats-card .text-sm {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
     margin: 0 !important;
     text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    word-wrap: break-word !important;
+    hyphens: auto !important;
   }
   
   /* Navigation fixes */
