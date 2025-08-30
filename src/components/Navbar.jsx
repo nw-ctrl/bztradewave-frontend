@@ -58,8 +58,8 @@ const Navbar = () => {
                 to={item.path}
                 className={`text-sm font-medium transition-colors duration-200 hover:text-primary ${
                   isActive(item.path) 
-                    ? isScrolled ? 'text-primary border-b-2 border-primary pb-1' : 'text-white border-b-2 border-white pb-1'
-                    : isScrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
+                    ? isScrolled ? 'text-primary border-b-2 border-primary pb-1' : 'text-primary border-b-2 border-primary pb-1'
+                    : isScrolled ? 'text-foreground hover:text-primary' : 'text-gray-800 hover:text-primary'
                 }`}
               >
                 {item.name}
@@ -72,7 +72,7 @@ const Navbar = () => {
                 className={`ml-4 ${
                   isScrolled 
                     ? 'bg-primary text-white hover:bg-primary/90' 
-                    : 'text-white border-white hover:bg-white hover:text-primary'
+                    : 'text-primary border-primary hover:bg-primary hover:text-white'
                 }`}
               >
                 Partner Login
