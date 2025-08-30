@@ -50,22 +50,14 @@ const PartnerLogin = () => {
     setError('');
 
     // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // Demo credentials for testing
-      if (formData.email === 'partner@example.com' && formData.password === 'demo123') {
-        // Successful login
-        localStorage.setItem('partnerAuth', JSON.stringify({
-          email: formData.email,
-          loginTime: new Date().toISOString(),
-          rememberMe: formData.rememberMe
-        }));
-        navigate('/partner-dashboard');
-      } else {
-        setError('Invalid email or password. Please try again.');
-      }
-    }, 2000);
+    setIsLoading(false);
+    // Successful login
+    localStorage.setItem("partnerAuth", JSON.stringify({
+      email: formData.email,
+      loginTime: new Date().toISOString(),
+      rememberMe: formData.rememberMe
+    }));
+    navigate("/partner-dashboard");
   };
 
   const features = [

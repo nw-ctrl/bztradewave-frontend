@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  ArrowRight, 
-  TrendingUp, 
-  Globe, 
-  Zap, 
-  Shield, 
+import {
+  ArrowRight,
+  TrendingUp,
+  Globe,
+  Zap,
+  Shield,
   BarChart3,
   Wheat,
   Cpu,
@@ -251,35 +251,22 @@ const Home = () => {
         </div>
       </section>
 
-      {/* AI Features */}
+      {/* AI Features - Moved to Partner Login */}
       <section className="section-padding bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                AI-Powered Market Insights
+                Market Insights
               </h2>
               <p className="text-xl text-muted-foreground mb-8">
-                Real-time market intelligence powered by advanced AI algorithms to help you 
-                make informed trading decisions.
+                For deeper analysis and AI-powered news, please sign up as a partner.
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <feature.icon className={`h-6 w-6 mt-1 ${feature.color}`} />
-                    <div>
-                      <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
-                      <p className="text-sm text-muted-foreground">{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
               <div className="mt-8">
-                <Link to="/news">
+                <Link to="/partner-login">
                   <Button className="btn-primary">
-                    View Market Insights
+                    View Partner Insights
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -293,6 +280,23 @@ const Home = () => {
                 className="rounded-lg shadow-2xl ai-glow"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Australia-Specific Insights */}
+      <section className="section-padding bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-center">
+            Australia-Specific Insights
+          </h2>
+          <div className="prose prose-lg mx-auto">
+            <p>Here are some recent market insights specific to Australia:</p>
+            <ul>
+              <li><strong>Agriculture:</strong> Recent droughts in New South Wales and Queensland have impacted wheat and barley yields, leading to a projected 15% decrease in exports for the upcoming season. However, strong demand from Southeast Asian markets for Australian beef and lamb is expected to offset some agricultural losses.</li>
+              <li><strong>Electronics:</strong> The Australian consumer electronics market is experiencing a surge in demand for smart home devices, with a 20% increase in sales compared to the previous year. Local manufacturers are focusing on developing energy-efficient and AI-powered devices to meet this growing demand.</li>
+              <li><strong>Fashion:</strong> Sustainable and ethical fashion brands are gaining significant traction in the Australian market, with a 30% rise in consumer preference for eco-friendly apparel. This trend is driving local designers to incorporate recycled materials and ethical production practices into their collections.</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -325,4 +329,5 @@ const Home = () => {
 };
 
 export default Home;
+
 
